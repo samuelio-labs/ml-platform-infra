@@ -63,6 +63,10 @@ resource "helm_release" "argocd" {
           timeoutSeconds      = 10
           failureThreshold    = 6
         }
+        resources = {
+          requests = { cpu = "100m", memory = "256Mi" }
+          limits   = { cpu = "1", memory = "2Gi" }
+        }
       }
     })
   ]
