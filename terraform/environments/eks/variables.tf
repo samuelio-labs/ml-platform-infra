@@ -1,13 +1,12 @@
 variable "kubectl_context" {
   description = "kubectl context for the EKS cluster"
   type        = string
-  default     = "arn:aws:eks:eu-north-1:122610500882:cluster/husky-b"
 }
 
 variable "minio_root_user" {
   description = "MinIO root username"
   type        = string
-  default     = "minioadmin"
+  sensitive   = true
 }
 
 variable "minio_root_password" {

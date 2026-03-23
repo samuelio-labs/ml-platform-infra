@@ -1,24 +1,3 @@
-# gp3 StorageClass using the EKS-managed EBS CSI driver.
-# The default gp2 class uses kubernetes.io/aws-ebs (in-tree), which CSI migration
-# maps to ebs.csi.aws.com — not matching ebs.csi.eks.amazonaws.com installed here.
-resource "kubernetes_storage_class" "gp3" {
-  metadata {
-    name = "gp3"
-    annotations = {
-      "storageclass.kubernetes.io/is-default-class" = "true"
-    }
-  }
-  storage_provisioner    = "ebs.csi.eks.amazonaws.com"
-  volume_binding_mode    = "WaitForFirstConsumer"
-  reclaim_policy         = "Delete"
-  allow_volume_expansion = true
-  parameters = {
-    type      = "gp3"
-    fsType    = "ext4"
-    encrypted = "true"
-  }
-}
-
 module "namespaces" {
   source = "../../modules/namespaces"
 
