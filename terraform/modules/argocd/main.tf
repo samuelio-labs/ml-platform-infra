@@ -50,16 +50,24 @@ resource "helm_release" "argocd" {
       # Disable DEX (SSO) for local development — use admin password only.
       dex = { enabled = false }
       repoServer = {
-        # Generous probe thresholds for local k3d — the repo-server can be
-        # slow to accept connections on first boot while initialising caches.
+        # Generous probe thresholds — the repo-server can be slow to start
+        # while initialising caches and pulling charts on first boot.
         livenessProbe = {
-          timeoutSeconds   = 10
-          failureThreshold = 6
-          periodSeconds    = 15
+          initialDelaySeconds = 30
+          timeoutSeconds      = 10
+          failureThreshold    = 6
+          periodSeconds       = 15
         }
         readinessProbe = {
-          timeoutSeconds   = 10
-          failureThreshold = 6
+          initialDelaySeconds = 15
+          timeoutSeconds      = 10
+          failureThreshold    = 6
+        }
+        # Explicit limits override the namespace LimitRange default (512Mi)
+        # which is too low for helm chart processing.
+        resources = {
+          requests = { cpu = "200m", memory = "512Mi" }
+          limits   = { cpu = "2", memory = "2Gi" }
         }
       }
     })
