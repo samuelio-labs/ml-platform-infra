@@ -1,9 +1,13 @@
 variable "namespaces" {
-  description = "Per-namespace resource quota configuration"
+  description = "Per-namespace resource quota and LimitRange configuration"
   type = map(object({
-    req_cpu = string
-    req_mem = string
-    lim_cpu = string
-    lim_mem = string
+    req_cpu         = string
+    req_mem         = string
+    lim_cpu         = string
+    lim_mem         = string
+    default_lim_cpu = string
+    default_lim_mem = string
+    default_req_cpu = string
+    default_req_mem = string
   }))
 }

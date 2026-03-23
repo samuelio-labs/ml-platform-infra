@@ -20,6 +20,29 @@ resource "kubernetes_namespace" "this" {
   }
 }
 
+resource "kubernetes_limit_range" "this" {
+  for_each = var.namespaces
+
+  metadata {
+    name      = "default-limits"
+    namespace = kubernetes_namespace.this[each.key].metadata[0].name
+  }
+
+  spec {
+    limit {
+      type = "Container"
+      default = {
+        cpu    = each.value.default_lim_cpu
+        memory = each.value.default_lim_mem
+      }
+      default_request = {
+        cpu    = each.value.default_req_cpu
+        memory = each.value.default_req_mem
+      }
+    }
+  }
+}
+
 resource "kubernetes_resource_quota" "this" {
   for_each = var.namespaces
 

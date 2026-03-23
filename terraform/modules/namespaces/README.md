@@ -20,6 +20,7 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [kubernetes_limit_range.this](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/limit_range) | resource |
 | [kubernetes_namespace.this](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace) | resource |
 | [kubernetes_resource_quota.this](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/resource_quota) | resource |
 
@@ -27,7 +28,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_namespaces"></a> [namespaces](#input\_namespaces) | Per-namespace resource quota configuration | <pre>map(object({<br/>    req_cpu = string<br/>    req_mem = string<br/>    lim_cpu = string<br/>    lim_mem = string<br/>  }))</pre> | n/a | yes |
+| <a name="input_namespaces"></a> [namespaces](#input\_namespaces) | Per-namespace resource quota and LimitRange configuration | <pre>map(object({<br/>    req_cpu         = string<br/>    req_mem         = string<br/>    lim_cpu         = string<br/>    lim_mem         = string<br/>    default_lim_cpu = string<br/>    default_lim_mem = string<br/>    default_req_cpu = string<br/>    default_req_mem = string<br/>  }))</pre> | n/a | yes |
 
 ## Outputs
 
