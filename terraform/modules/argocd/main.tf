@@ -49,6 +49,19 @@ resource "helm_release" "argocd" {
       }
       # Disable DEX (SSO) for local development — use admin password only.
       dex = { enabled = false }
+      repoServer = {
+        # Generous probe thresholds for local k3d — the repo-server can be
+        # slow to accept connections on first boot while initialising caches.
+        livenessProbe = {
+          timeoutSeconds   = 10
+          failureThreshold = 6
+          periodSeconds    = 15
+        }
+        readinessProbe = {
+          timeoutSeconds   = 10
+          failureThreshold = 6
+        }
+      }
     })
   ]
 }
