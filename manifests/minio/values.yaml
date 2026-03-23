@@ -12,7 +12,7 @@ defaultBuckets: "mlflow-artifacts,dvc-store,pipeline-cache"
 persistence:
   enabled: true
   size: 10Gi
-  storageClass: gp2
+  storageClass: gp3
 
 service:
   type: ClusterIP
