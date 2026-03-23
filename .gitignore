@@ -1,0 +1,76 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfstate.lock.info
+*.tflock
+# .terraform.lock.hcl is intentionally NOT ignored — pins provider versions
+*.tfvars
+!*.tfvars.example
+override.tf
+override.tf.json
+**/tfplan
+**/plan.txt
+
+# devenv / Nix
+.devenv/
+.devenv.flake.nix
+devenv.local.nix
+.direnv/
+.pre-commit-config.yaml
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# DVC
+/tmp/
+.dvc/cache/
+.dvc/tmp/
+
+# Secrets — never commit these
+*.env
+.env.*
+!.env.example
+secrets/
+kubeconfig
+*kubeconfig*
+*.pem
+*.key
+*.crt
+
+# Helm
+charts/
+*.tgz
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Node (if any tooling)
+node_modules/
