@@ -28,4 +28,4 @@ primary:
     host    all             all             0.0.0.0/0               md5
 
 metrics:
-  enabled: true   # exposes /metrics for Prometheus scraping (Phase 4)
+  enabled: false  # re-enable in Phase 4 with postgres superuser secret
