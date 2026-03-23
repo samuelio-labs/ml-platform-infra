@@ -4,7 +4,7 @@ module "namespaces" {
   namespaces = {
     argocd     = { lim_cpu = "8", lim_mem = "8Gi", default_lim_cpu = "500m", default_lim_mem = "512Mi" }
     mlflow     = { lim_cpu = "4", lim_mem = "4Gi", default_lim_cpu = "500m", default_lim_mem = "512Mi" }
-    ray-system = { lim_cpu = "4", lim_mem = "8Gi", default_lim_cpu = "500m", default_lim_mem = "512Mi" }
+    ray-system = { lim_cpu = "8", lim_mem = "12Gi", default_lim_cpu = "500m", default_lim_mem = "1Gi" }
     kubeflow   = { lim_cpu = "2", lim_mem = "4Gi", default_lim_cpu = "500m", default_lim_mem = "512Mi" }
     kserve     = { lim_cpu = "2", lim_mem = "4Gi", default_lim_cpu = "500m", default_lim_mem = "512Mi" }
     monitoring = { lim_cpu = "2", lim_mem = "4Gi", default_lim_cpu = "500m", default_lim_mem = "512Mi" }

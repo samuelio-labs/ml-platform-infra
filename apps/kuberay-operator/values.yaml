@@ -8,3 +8,11 @@ resources:
   limits:
     cpu: 500m
     memory: 1Gi
+
+# Disable automatic wait-gcs-ready init container injection.
+# That init container has hardcoded 200m/256Mi resources and OOMKills
+# because the Ray Python import alone exceeds 256Mi.
+# Ray workers use built-in GCS connection retry on startup instead.
+env:
+  - name: ENABLE_INIT_CONTAINER_INJECTION
+    value: "false"
