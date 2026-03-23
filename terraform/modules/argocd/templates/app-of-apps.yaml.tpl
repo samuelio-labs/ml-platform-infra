@@ -10,7 +10,10 @@ spec:
   source:
     repoURL: ${git_repo_url}
     targetRevision: ${git_target_revision}
-    path: argocd/apps
+    path: apps
+    directory:
+      recurse: true
+      include: "*/application.yaml"
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd

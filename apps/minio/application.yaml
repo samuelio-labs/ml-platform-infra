@@ -1,22 +1,22 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: mlflow
+  name: minio
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-wave: "0"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   sources:
-    # Helm chart — community-charts MLflow
-    - repoURL: https://community-charts.github.io/helm-charts
-      chart: mlflow
-      targetRevision: "1.8.1"
+    # Helm chart — official MinIO chart (uses minio/minio image, always available)
+    - repoURL: https://charts.min.io
+      chart: minio
+      targetRevision: "*"
       helm:
         valueFiles:
-          - $values/manifests/mlflow/values.yaml
+          - $values/apps/minio/values.yaml
     # Values source — our infra repo
     - repoURL: https://github.com/samuelio-labs/ml-platform-infra.git
       targetRevision: main
