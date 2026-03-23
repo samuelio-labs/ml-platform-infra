@@ -39,6 +39,7 @@ resource "kubernetes_secret" "postgres_credentials" {
   type = "Opaque"
 
   data = {
+    username = "mlflow"
     password = var.postgres_password
   }
 }
