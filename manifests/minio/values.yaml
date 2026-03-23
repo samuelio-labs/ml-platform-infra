@@ -1,13 +1,32 @@
-# Bitnami MinIO — https://artifacthub.io/packages/helm/bitnami/minio
+# Official MinIO Helm chart — https://charts.min.io/
 # Credentials are pre-provisioned by Terraform in the minio-credentials Secret.
 
-auth:
-  existingSecret: minio-credentials
-  rootUserSecretKey: root-user
-  rootPasswordSecretKey: root-password
+mode: standalone
+
+# Inject root credentials from existing secret (keeps Bitnami-style key names)
+extraEnvVars:
+  - name: MINIO_ROOT_USER
+    valueFrom:
+      secretKeyRef:
+        name: minio-credentials
+        key: root-user
+  - name: MINIO_ROOT_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: minio-credentials
+        key: root-password
 
 # Buckets created on first startup
-defaultBuckets: "mlflow-artifacts,dvc-store,pipeline-cache"
+buckets:
+  - name: mlflow-artifacts
+    policy: none
+    purge: false
+  - name: dvc-store
+    policy: none
+    purge: false
+  - name: pipeline-cache
+    policy: none
+    purge: false
 
 persistence:
   enabled: true
@@ -16,10 +35,7 @@ persistence:
 
 service:
   type: ClusterIP
-
-# Console UI disabled — image not available on this chart version
-console:
-  enabled: false
+  port: 9000
 
 resources:
   requests:
