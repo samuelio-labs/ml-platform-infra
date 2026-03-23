@@ -1,0 +1,34 @@
+# KubeRay RayCluster — https://ray-project.github.io/kuberay-helm/
+# Head node: control plane + dashboard, no workloads (num-cpus: "0").
+# Workers: autoscale 1-3 replicas to handle training jobs.
+
+image:
+  repository: rayproject/ray
+  tag: "2.40.0-py311"
+  pullPolicy: IfNotPresent
+
+head:
+  rayStartParams:
+    dashboard-host: "0.0.0.0"
+    num-cpus: "0"  # Reserve head for control plane only
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: "1"
+      memory: 2Gi
+
+worker:
+  groupName: default-worker
+  replicas: 1
+  minReplicas: 1
+  maxReplicas: 3
+  rayStartParams: {}
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: "1"
+      memory: 2Gi

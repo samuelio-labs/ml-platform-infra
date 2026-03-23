@@ -1,0 +1,10 @@
+# KubeRay Operator — https://ray-project.github.io/kuberay-helm/
+# Manages RayCluster, RayJob, and RayService CRDs.
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
