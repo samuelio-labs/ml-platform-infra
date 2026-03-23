@@ -52,27 +52,54 @@ in
     # Create the local k3d cluster with config matching production EKS topology.
     # Usage: cluster-up
     cluster-up.exec = ''
-      set -euo pipefail
-      CLUSTER_NAME="''${CLUSTER_NAME:-ml-platform}"
+            set -euo pipefail
+            CLUSTER_NAME="''${CLUSTER_NAME:-ml-platform}"
 
-      if k3d cluster list | grep -q "^$CLUSTER_NAME"; then
-        echo "Cluster '$CLUSTER_NAME' already exists — skipping creation."
-        k3d cluster start "$CLUSTER_NAME" 2>/dev/null || true
-      else
-        echo "Creating k3d cluster: $CLUSTER_NAME"
-        k3d cluster create "$CLUSTER_NAME" \
-          --image rancher/k3s:v1.35.2-k3s1 \
-          --agents 2 \
-          --k3s-arg "--disable=traefik@server:0" \
-          --port "8080:80@loadbalancer" \
-          --port "8443:443@loadbalancer" \
-          --wait
-        echo "Cluster ready."
-      fi
+            if k3d cluster list | grep -q "^$CLUSTER_NAME"; then
+              echo "Cluster '$CLUSTER_NAME' already exists — skipping creation."
+              k3d cluster start "$CLUSTER_NAME" 2>/dev/null || true
+            else
+              echo "Creating k3d cluster: $CLUSTER_NAME"
+              k3d cluster create "$CLUSTER_NAME" \
+                --image rancher/k3s:v1.35.2-k3s1 \
+                --agents 2 \
+                --k3s-arg "--disable=traefik@server:0" \
+                --port "8080:80@loadbalancer" \
+                --port "8443:443@loadbalancer" \
+                --wait
+              echo "Cluster ready."
+            fi
 
-      k3d kubeconfig merge "$CLUSTER_NAME" --kubeconfig-merge-default
-      kubectl config use-context "k3d-$CLUSTER_NAME"
-      kubectl cluster-info
+            k3d kubeconfig merge "$CLUSTER_NAME" --kubeconfig-merge-default
+            kubectl config use-context "k3d-$CLUSTER_NAME"
+            kubectl cluster-info
+
+            echo "Patching CoreDNS to use reliable upstream resolvers (8.8.8.8, 1.1.1.1)..."
+            kubectl patch configmap coredns -n kube-system --patch '
+      data:
+        Corefile: |
+          .:53 {
+              errors
+              health {
+                 lameduck 5s
+              }
+              ready
+              kubernetes cluster.local in-addr.arpa ip6.arpa {
+                 pods insecure
+                 fallthrough in-addr.arpa ip6.arpa
+                 ttl 30
+              }
+              prometheus :9153
+              forward . 8.8.8.8 1.1.1.1
+              cache 30
+              loop
+              reload
+              loadbalance
+          }
+      '
+            kubectl rollout restart deployment coredns -n kube-system
+            kubectl rollout status deployment coredns -n kube-system --timeout=60s
+            echo "CoreDNS ready."
     '';
 
     # Destroy the local k3d cluster.
