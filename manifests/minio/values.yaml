@@ -11,14 +11,15 @@ defaultBuckets: "mlflow-artifacts,dvc-store,pipeline-cache"
 
 persistence:
   enabled: true
-  size: 10Gi   # local dev — set 100Gi+ in prod
+  size: 10Gi
+  storageClass: gp2
 
 service:
   type: ClusterIP
 
-# Console UI (port 9001)
-consoleService:
-  type: ClusterIP
+# Console UI disabled — image not available on this chart version
+console:
+  enabled: false
 
 resources:
   requests:

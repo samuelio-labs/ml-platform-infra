@@ -11,7 +11,8 @@ auth:
 primary:
   persistence:
     enabled: true
-    size: 5Gi   # local dev — set 20Gi+ in prod
+    size: 5Gi
+    storageClass: gp2
 
   resources:
     requests:
