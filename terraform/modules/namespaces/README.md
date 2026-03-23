@@ -28,7 +28,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_namespaces"></a> [namespaces](#input\_namespaces) | Per-namespace resource quota and LimitRange configuration | <pre>map(object({<br/>    req_cpu         = string<br/>    req_mem         = string<br/>    lim_cpu         = string<br/>    lim_mem         = string<br/>    default_lim_cpu = string<br/>    default_lim_mem = string<br/>    default_req_cpu = string<br/>    default_req_mem = string<br/>  }))</pre> | n/a | yes |
+| <a name="input_namespaces"></a> [namespaces](#input\_namespaces) | Per-namespace resource quota and LimitRange configuration | <pre>map(object({<br/>    lim_cpu         = string<br/>    lim_mem         = string<br/>    default_lim_cpu = string<br/>    default_lim_mem = string<br/>  }))</pre> | n/a | yes |
 
 ## Outputs
 

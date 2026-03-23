@@ -12,7 +12,6 @@ primary:
   persistence:
     enabled: true
     size: 5Gi
-    storageClass: gp3
 
   resources:
     requests:

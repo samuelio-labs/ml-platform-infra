@@ -31,7 +31,6 @@ buckets:
 persistence:
   enabled: true
   size: 10Gi
-  storageClass: gp3
 
 service:
   type: ClusterIP

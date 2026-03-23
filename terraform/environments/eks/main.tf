@@ -2,12 +2,12 @@ module "namespaces" {
   source = "../../modules/namespaces"
 
   namespaces = {
-    argocd     = { req_cpu = "500m", req_mem = "2Gi", lim_cpu = "4", lim_mem = "6Gi", default_lim_cpu = "500m", default_lim_mem = "512Mi", default_req_cpu = "100m", default_req_mem = "128Mi" }
-    mlflow     = { req_cpu = "1", req_mem = "2Gi", lim_cpu = "4", lim_mem = "8Gi", default_lim_cpu = "500m", default_lim_mem = "1Gi", default_req_cpu = "100m", default_req_mem = "256Mi" }
-    ray-system = { req_cpu = "2", req_mem = "4Gi", lim_cpu = "8", lim_mem = "16Gi", default_lim_cpu = "500m", default_lim_mem = "1Gi", default_req_cpu = "100m", default_req_mem = "256Mi" }
-    kubeflow   = { req_cpu = "1", req_mem = "2Gi", lim_cpu = "4", lim_mem = "8Gi", default_lim_cpu = "500m", default_lim_mem = "1Gi", default_req_cpu = "100m", default_req_mem = "256Mi" }
-    kserve     = { req_cpu = "1", req_mem = "2Gi", lim_cpu = "4", lim_mem = "8Gi", default_lim_cpu = "500m", default_lim_mem = "1Gi", default_req_cpu = "100m", default_req_mem = "256Mi" }
-    monitoring = { req_cpu = "1", req_mem = "2Gi", lim_cpu = "4", lim_mem = "8Gi", default_lim_cpu = "500m", default_lim_mem = "1Gi", default_req_cpu = "100m", default_req_mem = "256Mi" }
+    argocd     = { lim_cpu = "4", lim_mem = "6Gi", default_lim_cpu = "500m", default_lim_mem = "512Mi" }
+    mlflow     = { lim_cpu = "4", lim_mem = "8Gi", default_lim_cpu = "500m", default_lim_mem = "1Gi" }
+    ray-system = { lim_cpu = "8", lim_mem = "16Gi", default_lim_cpu = "500m", default_lim_mem = "1Gi" }
+    kubeflow   = { lim_cpu = "4", lim_mem = "8Gi", default_lim_cpu = "500m", default_lim_mem = "1Gi" }
+    kserve     = { lim_cpu = "4", lim_mem = "8Gi", default_lim_cpu = "500m", default_lim_mem = "1Gi" }
+    monitoring = { lim_cpu = "4", lim_mem = "8Gi", default_lim_cpu = "500m", default_lim_mem = "1Gi" }
   }
 }
 

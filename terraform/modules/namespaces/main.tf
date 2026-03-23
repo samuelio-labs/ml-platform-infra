@@ -35,10 +35,6 @@ resource "kubernetes_limit_range" "this" {
         cpu    = each.value.default_lim_cpu
         memory = each.value.default_lim_mem
       }
-      default_request = {
-        cpu    = each.value.default_req_cpu
-        memory = each.value.default_req_mem
-      }
     }
   }
 }
@@ -53,10 +49,8 @@ resource "kubernetes_resource_quota" "this" {
 
   spec {
     hard = {
-      "requests.cpu"    = each.value.req_cpu
-      "requests.memory" = each.value.req_mem
-      "limits.cpu"      = each.value.lim_cpu
-      "limits.memory"   = each.value.lim_mem
+      "limits.cpu"    = each.value.lim_cpu
+      "limits.memory" = each.value.lim_mem
     }
   }
 }
