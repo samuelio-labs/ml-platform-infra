@@ -43,6 +43,14 @@ resource "helm_release" "argocd" {
         cm = {
           "application.resourceTrackingMethod" = "annotation"
         }
+        repositories = {
+          bitnami = {
+            url       = "registry-1.docker.io/bitnamicharts"
+            name      = "bitnami"
+            type      = "helm"
+            enableOCI = "true"
+          }
+        }
       }
       server = {
         service = { type = "ClusterIP" }

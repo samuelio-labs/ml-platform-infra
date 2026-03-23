@@ -10,8 +10,8 @@ metadata:
 spec:
   project: default
   sources:
-    # Helm chart — Bitnami MinIO (Broadcom repo)
-    - repoURL: https://repo.broadcom.com/bitnami-files
+    # Helm chart — Bitnami MinIO (OCI on Docker Hub)
+    - repoURL: registry-1.docker.io/bitnamicharts
       chart: minio
       targetRevision: "17.0.21"
       helm:
