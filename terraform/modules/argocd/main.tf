@@ -57,6 +57,12 @@ resource "helm_release" "argocd" {
       }
       # Disable DEX (SSO) for local development — use admin password only.
       dex = { enabled = false }
+      controller = {
+        resources = {
+          requests = { cpu = "250m", memory = "512Mi" }
+          limits   = { cpu = "1", memory = "1Gi" }
+        }
+      }
       repoServer = {
         # Generous probe thresholds — the repo-server can be slow to start
         # while initialising caches and pulling charts on first boot.

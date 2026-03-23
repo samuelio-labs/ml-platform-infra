@@ -55,6 +55,14 @@ in
             set -euo pipefail
             CLUSTER_NAME="''${CLUSTER_NAME:-ml-platform}"
 
+            # Preflight: at least 12 GiB of memory recommended for the full stack.
+            # To increase: colima stop && colima start --memory 12 --cpu 6
+            DOCKER_MEM_GIB=$(docker info --format '{{.MemTotal}}' 2>/dev/null | awk '{printf "%d", $1/1024/1024/1024}')
+            if [ "''${DOCKER_MEM_GIB:-0}" -lt 12 ]; then
+              echo "WARNING: Colima has ''${DOCKER_MEM_GIB}GiB available — at least 12GiB recommended for the full ML platform stack."
+              echo "         colima stop && colima start --memory 12 --cpu 6"
+            fi
+
             if k3d cluster list | grep -q "^$CLUSTER_NAME"; then
               echo "Cluster '$CLUSTER_NAME' already exists — skipping creation."
               k3d cluster start "$CLUSTER_NAME" 2>/dev/null || true
@@ -63,6 +71,8 @@ in
               k3d cluster create "$CLUSTER_NAME" \
                 --image rancher/k3s:v1.35.2-k3s1 \
                 --agents 2 \
+                --servers-memory 4G \
+                --agents-memory 6G \
                 --k3s-arg "--disable=traefik@server:0" \
                 --port "8080:80@loadbalancer" \
                 --port "8443:443@loadbalancer" \
