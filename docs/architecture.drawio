@@ -1,0 +1,430 @@
+<mxfile host="65bd71144e">
+    <diagram name="ML Platform — All Phases" id="ml-platform-layered">
+        <mxGraphModel dx="1506" dy="908" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2800" pageHeight="1800" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" value="Background" style="html=1;locked=0;" parent="0"/>
+                <mxCell id="bg-title" value="Production ML Platform + GenAI/LLMOps — Architecture  (View → Layers to toggle phases)" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=19;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="200" y="8" width="2400" height="36" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg-ext" value="" style="html=1;rounded=1;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;dashed=1;arcSize=2;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="52" width="2680" height="178" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg-ext-lbl" value="External / Developer Zone" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=12;fontStyle=1;fontColor=#555555;" parent="1" vertex="1">
+                    <mxGeometry x="78" y="58" width="280" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg-k8s" value="" style="html=1;rounded=1;fillColor=#EEF5FF;strokeColor=#2962FF;strokeWidth=3;verticalAlign=top;arcSize=1;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="250" width="2680" height="1510" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg-k8s-lbl" value="☸  Kubernetes Cluster   (k3d local  ↔  EKS production)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=15;fontStyle=1;fontColor=#2962FF;" parent="1" vertex="1">
+                    <mxGeometry x="82" y="258" width="700" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="lph1" value="Phase 1 — Foundation" style="html=1;locked=0;" parent="0"/>
+                <mxCell id="ph1-dev" value="&lt;b&gt;Developer&lt;/b&gt;&#xa;(Platform / ML Eng)" style="html=1;rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" parent="lph1" vertex="1">
+                    <mxGeometry x="85" y="75" width="180" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph1-gh-infra" value="&lt;b&gt;GitHub: ml-platform-infra&lt;/b&gt;&#xa;• Terraform modules&#xa;• ArgoCD Applications&#xa;• K8s manifests (GitOps source)" style="html=1;rounded=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;" parent="lph1" vertex="1">
+                    <mxGeometry x="295" y="75" width="250" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph1-tf" value="&lt;b&gt;Terraform&lt;/b&gt;&#xa;provisions cluster&#xa;namespaces, RBAC, PVCs" style="html=1;rounded=1;fillColor=#e8def8;strokeColor=#7b1fa2;fontSize=11;" parent="lph1" vertex="1">
+                    <mxGeometry x="570" y="90" width="190" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph1-argocd-bg" value="" style="html=1;rounded=1;fillColor=#fff9c4;strokeColor=#f9a825;strokeWidth=2;arcSize=3;" parent="lph1" vertex="1">
+                    <mxGeometry x="82" y="292" width="590" height="148" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph1-argocd-lbl" value="ns: argocd" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontStyle=1;fontColor=#f57f17;" parent="lph1" vertex="1">
+                    <mxGeometry x="92" y="298" width="140" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph1-argocd" value="&lt;b&gt;ArgoCD&lt;/b&gt;  (App-of-Apps pattern)&#xa;• watches ml-platform-infra — auto-sync every 3 min&#xa;• manages ALL platform namespaces via child Applications&#xa;• drift detection + automatic remediation" style="html=1;rounded=1;fillColor=#ffe57f;strokeColor=#f9a825;fontSize=11;align=left;" parent="lph1" vertex="1">
+                    <mxGeometry x="100" y="318" width="562" height="108" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph1-storage-bg" value="" style="html=1;rounded=1;fillColor=#fff3e0;strokeColor=#e65100;strokeWidth=2;arcSize=3;" parent="lph1" vertex="1">
+                    <mxGeometry x="82" y="458" width="590" height="330" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph1-storage-lbl" value="ns: platform-storage" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontStyle=1;fontColor=#e65100;" parent="lph1" vertex="1">
+                    <mxGeometry x="92" y="464" width="200" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph1-minio" value="&lt;b&gt;MinIO&lt;/b&gt; (S3-Compatible Object Store)&#xa;Buckets:&#xa;• mlflow-artifacts/  model binaries, plots&#xa;• dvc-store/          dataset versions&#xa;• pipeline-cache/     KFP step cache&#xa;• llm-models/         LLM weights (Ph 2.5)&#xa;• rag-docs/           document corpus (Ph 2.5)&#xa;StatefulSet + PVC 100Gi" style="html=1;rounded=1;fillColor=#ffcc80;strokeColor=#e65100;fontSize=11;align=left;" parent="lph1" vertex="1">
+                    <mxGeometry x="100" y="488" width="270" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph1-postgres" value="&lt;b&gt;PostgreSQL&lt;/b&gt; (Metadata Store)&#xa;Databases:&#xa;• mlflow     experiments, runs,&#xa;               params, metrics, tags&#xa;• kubeflow   pipeline metadata&#xa;• rag_store  pgvector chunks&#xa;               (Phase 2.5)&#xa;StatefulSet + PVC 20Gi" style="html=1;rounded=1;fillColor=#ffcc80;strokeColor=#e65100;fontSize=11;align=left;" parent="lph1" vertex="1">
+                    <mxGeometry x="386" y="488" width="272" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph1-mlp-bg" value="" style="html=1;rounded=1;fillColor=#e3f2fd;strokeColor=#1565c0;strokeWidth=2;arcSize=3;" parent="lph1" vertex="1">
+                    <mxGeometry x="82" y="806" width="590" height="330" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph1-mlp-lbl" value="ns: mlplatform" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontStyle=1;fontColor=#1565c0;" parent="lph1" vertex="1">
+                    <mxGeometry x="92" y="812" width="200" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph1-mlflow-track" value="&lt;b&gt;MLflow Tracking Server&lt;/b&gt;&#xa;• REST API :5000&#xa;• auto-log: params, metrics, tags&#xa;• artifact proxy → MinIO&#xa;• experiment comparison UI&#xa;• Deployment (2 replicas)" style="html=1;rounded=1;fillColor=#90caf9;strokeColor=#1565c0;fontSize=11;align=left;" parent="lph1" vertex="1">
+                    <mxGeometry x="100" y="836" width="270" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph1-mlflow-reg" value="&lt;b&gt;MLflow Model Registry&lt;/b&gt;&#xa;• model versioning&#xa;• stage lifecycle:&#xa;  None → Staging&#xa;  → Production → Archived&#xa;• alias-based promotion&#xa;• webhook on stage change" style="html=1;rounded=1;fillColor=#90caf9;strokeColor=#1565c0;fontSize=11;align=left;" parent="lph1" vertex="1">
+                    <mxGeometry x="386" y="836" width="272" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph1-a1" value="git push (infra)" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#555555;" parent="lph1" source="ph1-dev" target="ph1-gh-infra" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph1-a2" value="ArgoCD polls / webhook" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#f9a825;dashed=1;strokeWidth=2;" parent="lph1" source="ph1-gh-infra" target="ph1-argocd" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph1-a3" value="deploys" style="html=1;rounded=1;fontSize=10;strokeColor=#f9a825;dashed=1;" parent="lph1" source="ph1-argocd" target="ph1-minio" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph1-a4" value="deploys" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#f9a825;dashed=1;" parent="lph1" source="ph1-argocd" target="ph1-mlflow-track" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="30" y="372"/>
+                            <mxPoint x="30" y="976"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="ph1-a5" value="PUT artifacts" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#e65100;" parent="lph1" source="ph1-mlflow-track" target="ph1-minio" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph1-a6" value="experiment metadata" style="html=1;rounded=1;fontSize=10;strokeColor=#e65100;" parent="lph1" source="ph1-mlflow-track" target="ph1-postgres" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="lph2" value="Phase 2 — Training Platform" style="html=1;locked=0;" parent="0" visible="0"/>
+                <mxCell id="ph2-gh-models" value="&lt;b&gt;GitHub: ml-platform-models&lt;/b&gt;&#xa;• Model code (Python)&#xa;• DVC pipeline + .dvc files&#xa;• Kubeflow pipeline definitions" style="html=1;rounded=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;" parent="lph2" vertex="1">
+                    <mxGeometry x="790" y="75" width="250" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-dvc" value="&lt;b&gt;DVC Remote&lt;/b&gt;&#xa;dataset → MinIO dvc-store/&#xa;reproducible versioning" style="html=1;rounded=1;fillColor=#e8def8;strokeColor=#7b1fa2;fontSize=11;" parent="lph2" vertex="1">
+                    <mxGeometry x="1065" y="95" width="190" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-kf-bg" value="" style="html=1;rounded=1;fillColor=#e8f5e9;strokeColor=#2e7d32;strokeWidth=2;arcSize=3;" parent="lph2" vertex="1">
+                    <mxGeometry x="694" y="292" width="570" height="494" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-kf-lbl" value="ns: kubeflow" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontStyle=1;fontColor=#2e7d32;" parent="lph2" vertex="1">
+                    <mxGeometry x="704" y="298" width="200" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-kfp" value="&lt;b&gt;Kubeflow Pipelines&lt;/b&gt;  (SDK v2 — typed component DAG)" style="html=1;rounded=1;fillColor=#a5d6a7;strokeColor=#2e7d32;fontSize=11;fontStyle=1;" parent="lph2" vertex="1">
+                    <mxGeometry x="712" y="318" width="534" height="58" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-s1" value="&lt;b&gt;1. Data Prep&lt;/b&gt;&#xa;DVC pull&#xa;validate schema&#xa;train/test split" style="html=1;rounded=1;fillColor=#c8e6c9;strokeColor=#2e7d32;fontSize=11;" parent="lph2" vertex="1">
+                    <mxGeometry x="712" y="400" width="108" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-s2" value="&lt;b&gt;2. Features&lt;/b&gt;&#xa;sklearn pipeline&#xa;scale, encode&#xa;impute" style="html=1;rounded=1;fillColor=#c8e6c9;strokeColor=#2e7d32;fontSize=11;" parent="lph2" vertex="1">
+                    <mxGeometry x="830" y="400" width="108" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-s3" value="&lt;b&gt;3. Train&lt;/b&gt;&#xa;ray job submit&#xa;distributed fit&#xa;MLflow autolog" style="html=1;rounded=1;fillColor=#c8e6c9;strokeColor=#2e7d32;fontSize=11;" parent="lph2" vertex="1">
+                    <mxGeometry x="948" y="400" width="108" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-s4" value="&lt;b&gt;4. Evaluate&lt;/b&gt;&#xa;compute metrics&#xa;threshold gate&#xa;compare baseline" style="html=1;rounded=1;fillColor=#c8e6c9;strokeColor=#2e7d32;fontSize=11;" parent="lph2" vertex="1">
+                    <mxGeometry x="1066" y="400" width="112" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-s5" value="&lt;b&gt;5. Register&lt;/b&gt;  mlflow.register_model() — tag: challenger — stage: Staging" style="html=1;rounded=1;fillColor=#c8e6c9;strokeColor=#2e7d32;fontSize=11;" parent="lph2" vertex="1">
+                    <mxGeometry x="762" y="562" width="484" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-s1s2" style="html=1;edgeStyle=orthogonalEdgeStyle;" parent="lph2" source="ph2-s1" target="ph2-s2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-s2s3" style="html=1;edgeStyle=orthogonalEdgeStyle;" parent="lph2" source="ph2-s2" target="ph2-s3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-s3s4" style="html=1;edgeStyle=orthogonalEdgeStyle;" parent="lph2" source="ph2-s3" target="ph2-s4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-s4s5" style="html=1;edgeStyle=orthogonalEdgeStyle;" parent="lph2" source="ph2-s4" target="ph2-s5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-ray-bg" value="" style="html=1;rounded=1;fillColor=#f3e5f5;strokeColor=#6a1b9a;strokeWidth=2;arcSize=3;" parent="lph2" vertex="1">
+                    <mxGeometry x="694" y="806" width="570" height="330" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-ray-lbl" value="ns: ray-system" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontStyle=1;fontColor=#6a1b9a;" parent="lph2" vertex="1">
+                    <mxGeometry x="704" y="812" width="200" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-ray-head" value="&lt;b&gt;Ray Head Node&lt;/b&gt;&#xa;RayCluster CRD (KubeRay)&#xa;• GCS (global control store)&#xa;• Job scheduler&#xa;• Dashboard :8265&#xa;• Metrics :8080" style="html=1;rounded=1;fillColor=#ce93d8;strokeColor=#6a1b9a;fontSize=11;align=left;" parent="lph2" vertex="1">
+                    <mxGeometry x="712" y="836" width="200" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-rw1" value="&lt;b&gt;Worker Pod&lt;/b&gt;&#xa;CPU / GPU&#xa;autoscale 0→N" style="html=1;rounded=1;fillColor=#ce93d8;strokeColor=#6a1b9a;fontSize=11;" parent="lph2" vertex="1">
+                    <mxGeometry x="930" y="836" width="158" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-rw2" value="&lt;b&gt;Worker Pod&lt;/b&gt;&#xa;CPU / GPU&#xa;autoscale 0→N" style="html=1;rounded=1;fillColor=#ce93d8;strokeColor=#6a1b9a;fontSize=11;" parent="lph2" vertex="1">
+                    <mxGeometry x="1098" y="836" width="152" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-rw3" value="&lt;b&gt;Worker Pod&lt;/b&gt;&#xa;(scales to zero)" style="html=1;rounded=1;fillColor=#ce93d8;strokeColor=#6a1b9a;fontSize=11;" parent="lph2" vertex="1">
+                    <mxGeometry x="930" y="976" width="158" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-rw4" value="&lt;b&gt;Worker Pod&lt;/b&gt;&#xa;(scales to zero)" style="html=1;rounded=1;fillColor=#ce93d8;strokeColor=#6a1b9a;fontSize=11;" parent="lph2" vertex="1">
+                    <mxGeometry x="1098" y="976" width="152" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-rh1" style="html=1;edgeStyle=orthogonalEdgeStyle;" parent="lph2" source="ph2-ray-head" target="ph2-rw1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-rh2" style="html=1;edgeStyle=orthogonalEdgeStyle;" parent="lph2" source="ph2-ray-head" target="ph2-rw2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-rh3" style="html=1;edgeStyle=orthogonalEdgeStyle;" parent="lph2" source="ph2-ray-head" target="ph2-rw3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-rh4" style="html=1;edgeStyle=orthogonalEdgeStyle;" parent="lph2" source="ph2-ray-head" target="ph2-rw4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-a1" value="git push (model code)" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#555555;" parent="lph2" source="ph1-dev" target="ph2-gh-models" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="175" y="230"/>
+                            <mxPoint x="915" y="230"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="ph2-a2" value="dvc push/pull" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#7b1fa2;dashed=1;" parent="lph2" source="ph2-dvc" target="ph1-minio" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-a3" value="deploys" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#f9a825;dashed=1;" parent="lph2" source="ph1-argocd" target="ph2-kfp" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-a4" value="deploys" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#f9a825;dashed=1;" parent="lph2" source="ph1-argocd" target="ph2-ray-head" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-a5" value="ray job submit" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#6a1b9a;" parent="lph2" source="ph2-s3" target="ph2-ray-head" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-a6" value="log metrics/artifacts" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#1565c0;" parent="lph2" source="ph2-ray-head" target="ph1-mlflow-track" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph2-a7" value="register_model()" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#1565c0;" parent="lph2" source="ph2-s5" target="ph1-mlflow-reg" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="lph25" value="Phase 2.5 — GenAI / LLMOps" style="html=1;locked=0;" parent="0" visible="0"/>
+                <mxCell id="ph25-weights" value="&lt;b&gt;LLM Model Weights&lt;/b&gt;&#xa;stored in MinIO: llm-models/&#xa;version-pinned in Helm values" style="html=1;rounded=1;fillColor=#e8def8;strokeColor=#7b1fa2;fontSize=11;" parent="lph25" vertex="1">
+                    <mxGeometry x="1280" y="88" width="210" height="104" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph25-llm-bg" value="" style="html=1;rounded=1;fillColor=#fff8e1;strokeColor=#f57f17;strokeWidth=2;arcSize=3;" parent="lph25" vertex="1">
+                    <mxGeometry x="1286" y="292" width="620" height="494" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph25-llm-lbl" value="ns: llm-serving" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontStyle=1;fontColor=#f57f17;" parent="lph25" vertex="1">
+                    <mxGeometry x="1296" y="298" width="200" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph25-nginx" value="&lt;b&gt;NGINX Ingress&lt;/b&gt;   rate-limit: 10 req/s per IP  ·  API key auth  ·  /v1/* → vLLM   /rag/* → Query Service" style="html=1;rounded=1;fillColor=#ffe0b2;strokeColor=#f57f17;fontSize=11;" parent="lph25" vertex="1">
+                    <mxGeometry x="1304" y="318" width="584" height="68" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph25-vllm" value="&lt;b&gt;vLLM Serving Engine&lt;/b&gt;&#xa;Model: Mistral-7B-Instruct (prod) / TinyLlama-1.1B (local dev)&#xa;• PagedAttention — non-contiguous KV cache blocks&#xa;• Continuous batching — high GPU utilisation&#xa;• OpenAI-compatible REST :8000&#xa;• Prometheus metrics :8001/metrics&#xa;• Weights pulled from MinIO at init (not baked into image)&#xa;• CPU mode (local) / GPU mode (prod) via Helm values override" style="html=1;rounded=1;fillColor=#ffe57f;strokeColor=#f57f17;fontSize=11;align=left;" parent="lph25" vertex="1">
+                    <mxGeometry x="1304" y="404" width="584" height="266" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph25-hpa" value="HPA: vllm_request_queue_depth&#xa;min 1 → max 4 replicas" style="html=1;rounded=1;fillColor=#ffe0b2;strokeColor=#f57f17;fontSize=11;" parent="lph25" vertex="1">
+                    <mxGeometry x="1304" y="688" width="280" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph25-sm" value="ServiceMonitor&#xa;scrape :8001  interval 15s" style="html=1;rounded=1;fillColor=#ffe0b2;strokeColor=#f57f17;fontSize=11;" parent="lph25" vertex="1">
+                    <mxGeometry x="1608" y="688" width="280" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph25-rag-bg" value="" style="html=1;rounded=1;fillColor=#e8f5e9;strokeColor=#388e3c;strokeWidth=2;arcSize=3;" parent="lph25" vertex="1">
+                    <mxGeometry x="1286" y="806" width="620" height="330" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph25-rag-lbl" value="ns: rag-platform" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontStyle=1;fontColor=#388e3c;" parent="lph25" vertex="1">
+                    <mxGeometry x="1296" y="812" width="200" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph25-pgv" value="&lt;b&gt;pgvector&lt;/b&gt;&#xa;PostgreSQL + pgvector ext&#xa;DB: rag_store&#xa;ivfflat index (cosine, dim=384)" style="html=1;rounded=1;fillColor=#a5d6a7;strokeColor=#388e3c;fontSize=11;" parent="lph25" vertex="1">
+                    <mxGeometry x="1304" y="836" width="286" height="128" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph25-embed" value="&lt;b&gt;Embedding Service&lt;/b&gt;&#xa;all-MiniLM-L6-v2 (dim=384)&#xa;POST /embed → float32[]&#xa;CPU-native  shared by all services" style="html=1;rounded=1;fillColor=#a5d6a7;strokeColor=#388e3c;fontSize=11;" parent="lph25" vertex="1">
+                    <mxGeometry x="1606" y="836" width="286" height="128" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph25-ingest" value="&lt;b&gt;RAG Ingestion Service&lt;/b&gt;&#xa;DVC pull → chunk (512/64) → embed&#xa;→ pgvector upsert (idempotent)" style="html=1;rounded=1;fillColor=#c8e6c9;strokeColor=#388e3c;fontSize=11;" parent="lph25" vertex="1">
+                    <mxGeometry x="1304" y="982" width="286" height="128" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph25-query" value="&lt;b&gt;RAG Query Service&lt;/b&gt;&#xa;embed question → cosine search&#xa;→ vLLM generate&#xa;→ answer + source citations" style="html=1;rounded=1;fillColor=#c8e6c9;strokeColor=#388e3c;fontSize=11;" parent="lph25" vertex="1">
+                    <mxGeometry x="1606" y="982" width="286" height="128" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph25-a1" value="deploys" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#f9a825;dashed=1;" parent="lph25" source="ph1-argocd" target="ph25-nginx" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph25-a2" value="deploys" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#f9a825;dashed=1;" parent="lph25" source="ph1-argocd" target="ph25-ingest" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph25-a3" value="pull weights (startup)" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#f57f17;" parent="lph25" source="ph1-minio" target="ph25-vllm" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph25-a4" value="/v1/chat/completions" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#f57f17;" parent="lph25" source="ph25-nginx" target="ph25-vllm" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph25-a5" value="/rag/query" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#388e3c;strokeWidth=2;" parent="lph25" source="ph25-nginx" target="ph25-query" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph25-a6" value="embed question" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#388e3c;" parent="lph25" source="ph25-query" target="ph25-embed" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph25-a7" value="cosine search" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#388e3c;" parent="lph25" source="ph25-query" target="ph25-pgv" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph25-a8" value="generate" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#f57f17;strokeWidth=2;" parent="lph25" source="ph25-query" target="ph25-vllm" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph25-a9" value="dvc pull docs" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#e65100;dashed=1;" parent="lph25" source="ph25-ingest" target="ph1-minio" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph25-a10" value="embed chunks (batch)" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#388e3c;" parent="lph25" source="ph25-ingest" target="ph25-embed" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph25-a11" value="upsert embeddings" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#388e3c;" parent="lph25" source="ph25-ingest" target="ph25-pgv" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph25-a12" value="uses rag_store DB" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#e65100;dashed=1;" parent="lph25" source="ph25-pgv" target="ph1-postgres" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="lph3" value="Phase 3 — Serving" style="html=1;locked=0;" parent="0" visible="0"/>
+                <mxCell id="ph3-client" value="&lt;b&gt;Inference Client&lt;/b&gt;&#xa;REST: /v1/models/X:predict&#xa;gRPC: v2 inference protocol" style="html=1;rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="lph3" vertex="1">
+                    <mxGeometry x="1950" y="85" width="220" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph3-kserve-bg" value="" style="html=1;rounded=1;fillColor=#fce4ec;strokeColor=#880e4f;strokeWidth=2;arcSize=3;" parent="lph3" vertex="1">
+                    <mxGeometry x="1928" y="292" width="790" height="844" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph3-kserve-lbl" value="ns: kserve" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontStyle=1;fontColor=#880e4f;" parent="lph3" vertex="1">
+                    <mxGeometry x="1938" y="298" width="200" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph3-ctrl" value="&lt;b&gt;KServe Controller&lt;/b&gt;   InferenceService CRD reconciler — creates Predictor/Transformer pods, manages canary splits, Istio VirtualService" style="html=1;rounded=1;fillColor=#f48fb1;strokeColor=#880e4f;fontSize=11;fontStyle=1;" parent="lph3" vertex="1">
+                    <mxGeometry x="1946" y="318" width="754" height="68" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph3-istio" value="&lt;b&gt;Istio Ingress Gateway&lt;/b&gt;&#xa;TLS termination · mTLS&#xa;Canary: 90% stable / 10% canary" style="html=1;rounded=1;fillColor=#f8bbd0;strokeColor=#880e4f;fontSize=11;" parent="lph3" vertex="1">
+                    <mxGeometry x="1946" y="406" width="350" height="108" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph3-canary-note" value="Traffic split at Istio layer&#xa;no code change required&#xa;model rollout = manifest PR" style="html=1;rounded=1;fillColor=#f8bbd0;strokeColor=#880e4f;fontSize=11;fontStyle=2;" parent="lph3" vertex="1">
+                    <mxGeometry x="2316" y="406" width="360" height="108" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph3-pred" value="&lt;b&gt;Predictor Pod&lt;/b&gt;&#xa;sklearn / pytorch / onnx runtime&#xa;REST :8080 /v1/models/{name}:predict&#xa;gRPC :8081  v2 inference protocol&#xa;pulls model from MLflow Registry" style="html=1;rounded=1;fillColor=#f48fb1;strokeColor=#880e4f;fontSize=11;align=left;" parent="lph3" vertex="1">
+                    <mxGeometry x="1946" y="534" width="350" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph3-trans" value="&lt;b&gt;Transformer Pod&lt;/b&gt;&#xa;pre/post processing&#xa;feature encoding on raw input&#xa;response formatting" style="html=1;rounded=1;fillColor=#f48fb1;strokeColor=#880e4f;fontSize=11;align=left;" parent="lph3" vertex="1">
+                    <mxGeometry x="2316" y="534" width="360" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph3-stable" value="&lt;b&gt;Stable Predictor&lt;/b&gt;&#xa;model version N" style="html=1;rounded=1;fillColor=#f48fb1;strokeColor=#880e4f;fontSize=11;" parent="lph3" vertex="1">
+                    <mxGeometry x="1946" y="714" width="350" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph3-canary" value="&lt;b&gt;Canary Predictor&lt;/b&gt;&#xa;model version N+1" style="html=1;rounded=1;fillColor=#f48fb1;strokeColor=#880e4f;fontSize=11;" parent="lph3" vertex="1">
+                    <mxGeometry x="2316" y="714" width="360" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph3-hpa" value="HPA  min 1 → max 10  target CPU 70%" style="html=1;rounded=1;fillColor=#f8bbd0;strokeColor=#880e4f;fontSize=11;" parent="lph3" vertex="1">
+                    <mxGeometry x="1946" y="814" width="730" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph3-a1" value="inference requests" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#880e4f;strokeWidth=2;" parent="lph3" source="ph3-client" target="ph3-istio" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph3-a2" value="deploys InferenceService" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#f9a825;dashed=1;" parent="lph3" source="ph1-argocd" target="ph3-ctrl" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph3-a3" value="90%" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#880e4f;" parent="lph3" source="ph3-istio" target="ph3-stable" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph3-a4" value="10%" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#880e4f;" parent="lph3" source="ph3-istio" target="ph3-canary" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph3-a5" value="pull model artifact" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#880e4f;" parent="lph3" source="ph3-pred" target="ph1-mlflow-reg" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="lph4" value="Phase 4 — Observability" style="html=1;locked=0;" parent="0" visible="0"/>
+                <mxCell id="ph4-mon-bg" value="" style="html=1;rounded=1;fillColor=#e0f7fa;strokeColor=#00695c;strokeWidth=2;arcSize=2;" parent="lph4" vertex="1">
+                    <mxGeometry x="82" y="1156" width="2636" height="574" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-mon-lbl" value="ns: monitoring" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontStyle=1;fontColor=#00695c;" parent="lph4" vertex="1">
+                    <mxGeometry x="92" y="1162" width="200" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-otel" value="&lt;b&gt;OpenTelemetry Collector&lt;/b&gt;&#xa;• OTLP receiver (metrics + traces)&#xa;• scrapes Ray, KServe, MLflow,&#xa;  vLLM, RAG services&#xa;• exporters: Prometheus, Tempo" style="html=1;rounded=1;fillColor=#80deea;strokeColor=#00695c;fontSize=11;align=left;" parent="lph4" vertex="1">
+                    <mxGeometry x="100" y="1190" width="340" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-prom" value="&lt;b&gt;Prometheus&lt;/b&gt;&#xa;Scrape targets:&#xa;• node-exporter, kubelet&#xa;• Ray :8080, KServe :8080&#xa;• vLLM :8001, MLflow :5000&#xa;• Pushgateway (Ragas scores)&#xa;PrometheusRules: SLO alerts" style="html=1;rounded=1;fillColor=#80deea;strokeColor=#00695c;fontSize=11;align=left;" parent="lph4" vertex="1">
+                    <mxGeometry x="460" y="1190" width="340" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-grafana" value="&lt;b&gt;Grafana&lt;/b&gt;&#xa;Datasources: Prometheus, Tempo&#xa;Dashboards:&#xa;• Platform Health&#xa;• Ray Cluster Utilization&#xa;• KServe Inference SLOs&#xa;• LLM Serving (tokens/s, TTFT)&#xa;• RAG Quality (Ragas scores)" style="html=1;rounded=1;fillColor=#80deea;strokeColor=#00695c;fontSize=11;align=left;" parent="lph4" vertex="1">
+                    <mxGeometry x="820" y="1190" width="340" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-alert" value="&lt;b&gt;Alertmanager&lt;/b&gt;&#xa;• inference p99 &gt; 500ms&#xa;• TTFT p95 &gt; 2s&#xa;• training job failed&#xa;• Ragas score &lt; 0.7&#xa;• MinIO disk &gt; 85%&#xa;→ Slack / PagerDuty" style="html=1;rounded=1;fillColor=#80deea;strokeColor=#00695c;fontSize=11;align=left;" parent="lph4" vertex="1">
+                    <mxGeometry x="1180" y="1190" width="300" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-tempo" value="&lt;b&gt;Grafana Tempo&lt;/b&gt;&#xa;Distributed tracing:&#xa;• KFP pipeline steps&#xa;• inference request path&#xa;• RAG query end-to-end" style="html=1;rounded=1;fillColor=#80deea;strokeColor=#00695c;fontSize=11;align=left;" parent="lph4" vertex="1">
+                    <mxGeometry x="1500" y="1190" width="300" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-loki" value="&lt;b&gt;Loki + Promtail&lt;/b&gt;&#xa;Promtail DaemonSet&#xa;• tails all pod logs&#xa;• structured JSON (RAG/LLM)&#xa;• queryable Grafana Explore" style="html=1;rounded=1;fillColor=#80deea;strokeColor=#00695c;fontSize=11;align=left;" parent="lph4" vertex="1">
+                    <mxGeometry x="1820" y="1190" width="300" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-ragas" value="&lt;b&gt;Ragas Eval Job&lt;/b&gt; (CronJob / CI-triggered)   faithfulness · answer_relevance · context_precision  →  Prometheus Pushgateway  →  RAG Quality dashboard" style="html=1;rounded=1;fillColor=#dce8f5;strokeColor=#00695c;fontSize=11;" parent="lph4" vertex="1">
+                    <mxGeometry x="100" y="1416" width="900" height="68" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-db1" value="Platform Health" style="html=1;rounded=1;fillColor=#b2ebf2;strokeColor=#00695c;fontSize=11;fontStyle=1;" parent="lph4" vertex="1">
+                    <mxGeometry x="100" y="1510" width="190" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-db2" value="Ray Utilization" style="html=1;rounded=1;fillColor=#b2ebf2;strokeColor=#00695c;fontSize=11;fontStyle=1;" parent="lph4" vertex="1">
+                    <mxGeometry x="300" y="1510" width="190" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-db3" value="KServe Inference SLOs" style="html=1;rounded=1;fillColor=#b2ebf2;strokeColor=#00695c;fontSize=11;fontStyle=1;" parent="lph4" vertex="1">
+                    <mxGeometry x="500" y="1510" width="200" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-db4" value="LLM Serving" style="html=1;rounded=1;fillColor=#b2ebf2;strokeColor=#00695c;fontSize=11;fontStyle=1;" parent="lph4" vertex="1">
+                    <mxGeometry x="710" y="1510" width="190" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-db5" value="RAG Quality (Ragas)" style="html=1;rounded=1;fillColor=#b2ebf2;strokeColor=#00695c;fontSize=11;fontStyle=1;" parent="lph4" vertex="1">
+                    <mxGeometry x="910" y="1510" width="200" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-a1" value="forward metrics" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#00695c;" parent="lph4" source="ph4-otel" target="ph4-prom" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-a2" value="traces" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#00695c;" parent="lph4" source="ph4-otel" target="ph4-tempo" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-a3" value="datasource" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#00695c;" parent="lph4" source="ph4-prom" target="ph4-grafana" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-a4" value="fire alerts" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#00695c;" parent="lph4" source="ph4-prom" target="ph4-alert" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-a5" value="Ray :8080" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#00695c;dashed=1;" parent="lph4" source="ph2-ray-head" target="ph4-otel" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-a6" value="KServe metrics" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#00695c;dashed=1;" parent="lph4" source="ph3-pred" target="ph4-otel" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-a7" value=":8001/metrics" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#00695c;dashed=1;" parent="lph4" source="ph25-vllm" target="ph4-prom" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-a8" value="/metrics" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#00695c;dashed=1;" parent="lph4" source="ph1-mlflow-track" target="ph4-prom" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-a9" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#00695c;" parent="lph4" source="ph4-grafana" target="ph4-db1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-a10" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#00695c;" parent="lph4" source="ph4-grafana" target="ph4-db2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-a11" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#00695c;" parent="lph4" source="ph4-grafana" target="ph4-db3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-a12" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#00695c;" parent="lph4" source="ph4-grafana" target="ph4-db4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-a13" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#00695c;" parent="lph4" source="ph4-grafana" target="ph4-db5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph4-a14" value="structured logs" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#00695c;dashed=1;" parent="lph4" source="ph25-query" target="ph4-loki" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="lph5" value="Phase 5 — CI/CD" style="html=1;locked=0;" parent="0" visible="0"/>
+                <mxCell id="ph5-actions" value="&lt;b&gt;GitHub Actions CI/CD&lt;/b&gt;&#xa;test → lint → build image&#xa;→ trigger KFP pipeline&#xa;→ promote model (Staging→Prod)&#xa;→ update image tag (GitOps)&#xa;→ smoke test vLLM endpoint&#xa;→ Ragas eval on doc update" style="html=1;rounded=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;" parent="lph5" vertex="1">
+                    <mxGeometry x="1490" y="68" width="280" height="162" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph5-a1" value="triggers CI on push/PR" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#b85450;" parent="lph5" source="ph2-gh-models" target="ph5-actions" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph5-a2" value="kfp.run_pipeline()" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#b85450;" parent="lph5" source="ph5-actions" target="ph2-kfp" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph5-a3" value="update image tag (GitOps promotion)" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#b85450;" parent="lph5" source="ph5-actions" target="ph1-gh-infra" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1630" y="46"/>
+                            <mxPoint x="420" y="46"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="ph5-a4" value="smoke test vLLM" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#b85450;" parent="lph5" source="ph5-actions" target="ph25-vllm" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph5-a5" value="trigger ingestion" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#b85450;" parent="lph5" source="ph5-actions" target="ph25-ingest" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ph5-a6" value="run Ragas eval" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;fontSize=10;strokeColor=#b85450;" parent="lph5" source="ph5-actions" target="ph4-ragas" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
