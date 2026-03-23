@@ -80,26 +80,3 @@ resource "kubernetes_resource_quota" "this" {
     }
   }
 }
-
-resource "kubernetes_limit_range" "this" {
-  for_each = local.namespaces
-
-  metadata {
-    name      = "default-limits"
-    namespace = kubernetes_namespace.this[each.key].metadata[0].name
-  }
-
-  spec {
-    limit {
-      type = "Container"
-      default = {
-        cpu    = "500m"
-        memory = "512Mi"
-      }
-      default_request = {
-        cpu    = "100m"
-        memory = "128Mi"
-      }
-    }
-  }
-}

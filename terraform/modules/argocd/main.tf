@@ -63,12 +63,6 @@ resource "helm_release" "argocd" {
           timeoutSeconds      = 10
           failureThreshold    = 6
         }
-        # Explicit limits override the namespace LimitRange default (512Mi)
-        # which is too low for helm chart processing.
-        resources = {
-          requests = { cpu = "200m", memory = "512Mi" }
-          limits   = { cpu = "2", memory = "2Gi" }
-        }
       }
     })
   ]
