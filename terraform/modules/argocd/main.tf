@@ -1,3 +1,21 @@
+terraform {
+  required_version = ">= 1.9"
+  required_providers {
+    helm = {
+      source  = "hashicorp/helm"
+      version = ">= 2.14"
+    }
+    local = {
+      source  = "hashicorp/local"
+      version = ">= 2.5"
+    }
+    null = {
+      source  = "hashicorp/null"
+      version = ">= 3.2"
+    }
+  }
+}
+
 locals {
   app_of_apps_manifest = templatefile("${path.module}/templates/app-of-apps.yaml.tpl", {
     git_repo_url        = var.git_repo_url
@@ -12,8 +30,7 @@ resource "helm_release" "argocd" {
   version          = var.chart_version
   namespace        = "argocd"
   create_namespace = false # namespace created by the namespaces module
-  wait             = true
-  timeout          = 600
+  wait             = false
 
   values = [
     yamlencode({

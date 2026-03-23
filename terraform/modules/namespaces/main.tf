@@ -1,3 +1,13 @@
+terraform {
+  required_version = ">= 1.9"
+  required_providers {
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = ">= 2.30"
+    }
+  }
+}
+
 locals {
   # Resource quotas sized for local k3d development (single-node or 2-agent cluster).
   # In production (EKS) these are overridden per-environment.

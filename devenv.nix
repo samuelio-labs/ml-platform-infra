@@ -164,8 +164,10 @@ in
     terraform-lint = {
       enable = true;
       name = "terraform-lint";
-      description = "Lint Terraform files with tflint";
-      entry = "${pkgs.tflint}/bin/tflint";
+      description = "Lint Terraform files with tflint (v0.47+ recursive mode)";
+      # tflint v0.47+ dropped file-argument support; --recursive scans all dirs.
+      entry = "${pkgs.tflint}/bin/tflint --recursive";
+      pass_filenames = false;
       files = "\\.tf$";
       excludes = [ "\\.terraform-cache" ];
     };
@@ -173,8 +175,27 @@ in
     terraform-doc = {
       enable = true;
       name = "terraform-doc";
-      description = "Auto-generate variable/output docs into README.md";
-      entry = "${pkgs.terraform-docs}/bin/terraform-docs markdown table --output-file README.md --output-mode inject";
+      description = "Auto-generate README.md docs for each Terraform module";
+      # terraform-docs accepts exactly one directory, not individual files.
+      # This script finds every module dir with .tf files and generates docs.
+      entry =
+        let
+          script = pkgs.writeShellScript "terraform-docs-hook" ''
+            set -euo pipefail
+            find terraform/modules -mindepth 1 -maxdepth 1 -type d | while read -r dir; do
+              if ls "$dir"/*.tf 2>/dev/null | grep -q .; then
+                ${pkgs.terraform-docs}/bin/terraform-docs markdown table \
+                  --output-file README.md \
+                  --output-mode replace \
+                  "$dir"
+              # Ensure trailing newline so end-of-file-fixer doesn't re-trigger
+              [ -n "$(tail -c1 "$dir/README.md")" ] && printf '\n' >> "$dir/README.md"
+              fi
+            done
+          '';
+        in
+        "${script}";
+      pass_filenames = false;
       files = "\\.tf$";
       excludes = [ "\\.terraform-cache" ];
     };
