@@ -30,7 +30,7 @@ resource "helm_release" "argocd" {
   version          = var.chart_version
   namespace        = "argocd"
   create_namespace = false # namespace created by the namespaces module
-  wait             = false
+  wait             = true
 
   values = [
     yamlencode({
