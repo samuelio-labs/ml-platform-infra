@@ -35,6 +35,8 @@ No modules.
 | <a name="input_chart_version"></a> [chart\_version](#input\_chart\_version) | ArgoCD Helm chart version | `string` | `"7.7.0"` | no |
 | <a name="input_git_repo_url"></a> [git\_repo\_url](#input\_git\_repo\_url) | HTTPS URL of the ml-platform-infra git repository | `string` | n/a | yes |
 | <a name="input_git_target_revision"></a> [git\_target\_revision](#input\_git\_target\_revision) | Branch or tag ArgoCD tracks | `string` | `"main"` | no |
+| <a name="input_kubectl_context"></a> [kubectl\_context](#input\_kubectl\_context) | kubectl context used to apply the App-of-Apps manifest after ArgoCD is ready | `string` | n/a | yes |
+| <a name="input_server_insecure"></a> [server\_insecure](#input\_server\_insecure) | Disable TLS on the ArgoCD server (true for local dev, false for production) | `bool` | `false` | no |
 
 ## Outputs
 

@@ -38,7 +38,7 @@ resource "helm_release" "argocd" {
         params = {
           # Disable TLS at the ArgoCD server level for local k3d.
           # TLS termination is handled by the ingress or port-forward.
-          "server.insecure" = true
+          "server.insecure" = var.server_insecure
         }
         cm = {
           "application.resourceTrackingMethod" = "annotation"
@@ -81,7 +81,7 @@ resource "null_resource" "apply_app_of_apps" {
   }
 
   provisioner "local-exec" {
-    command = "kubectl apply -f ${local_file.app_of_apps.filename} --context k3d-ml-platform"
+    command = "kubectl apply -f ${local_file.app_of_apps.filename} --context ${var.kubectl_context}"
   }
 
   depends_on = [helm_release.argocd, local_file.app_of_apps]

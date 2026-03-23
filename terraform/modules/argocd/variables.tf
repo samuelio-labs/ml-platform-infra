@@ -14,3 +14,14 @@ variable "git_target_revision" {
   type        = string
   default     = "main"
 }
+
+variable "kubectl_context" {
+  description = "kubectl context used to apply the App-of-Apps manifest after ArgoCD is ready"
+  type        = string
+}
+
+variable "server_insecure" {
+  description = "Disable TLS on the ArgoCD server (true for local dev, false for production)"
+  type        = bool
+  default     = false
+}

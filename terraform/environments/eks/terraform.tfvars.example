@@ -1,0 +1,6 @@
+# Copy to terraform.tfvars and fill in real values.
+# terraform.tfvars is gitignored — never commit it.
+
+minio_root_password = "changeme-strong-password"
+postgres_password   = "changeme-pg-password"
+mlflow_secret_key   = "changeme-32-char-random-secret!!"

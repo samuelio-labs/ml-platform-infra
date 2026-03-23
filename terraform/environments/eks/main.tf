@@ -19,8 +19,8 @@ module "argocd" {
   chart_version       = var.argocd_chart_version
   git_repo_url        = var.git_repo_url
   git_target_revision = var.git_target_revision
-  kubectl_context     = "k3d-ml-platform"
-  server_insecure     = true
+  kubectl_context     = var.kubectl_context
+  server_insecure     = false
 
   depends_on = [module.namespaces]
 }
