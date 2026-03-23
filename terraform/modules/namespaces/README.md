@@ -25,7 +25,9 @@ No modules.
 
 ## Inputs
 
-No inputs.
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_namespaces"></a> [namespaces](#input\_namespaces) | Per-namespace resource quota configuration | <pre>map(object({<br/>    req_cpu = string<br/>    req_mem = string<br/>    lim_cpu = string<br/>    lim_mem = string<br/>  }))</pre> | n/a | yes |
 
 ## Outputs
 

@@ -1,5 +1,14 @@
 module "namespaces" {
   source = "../../modules/namespaces"
+
+  namespaces = {
+    argocd     = { req_cpu = "500m", req_mem = "1Gi", lim_cpu = "2", lim_mem = "4Gi" }
+    mlflow     = { req_cpu = "1", req_mem = "2Gi", lim_cpu = "4", lim_mem = "8Gi" }
+    ray-system = { req_cpu = "2", req_mem = "4Gi", lim_cpu = "8", lim_mem = "16Gi" }
+    kubeflow   = { req_cpu = "1", req_mem = "2Gi", lim_cpu = "4", lim_mem = "8Gi" }
+    kserve     = { req_cpu = "1", req_mem = "2Gi", lim_cpu = "4", lim_mem = "8Gi" }
+    monitoring = { req_cpu = "1", req_mem = "2Gi", lim_cpu = "4", lim_mem = "8Gi" }
+  }
 }
 
 module "secrets" {

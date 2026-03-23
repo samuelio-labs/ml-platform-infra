@@ -8,51 +8,8 @@ terraform {
   }
 }
 
-locals {
-  # Resource quotas sized for local k3d development (single-node or 2-agent cluster).
-  # In production (EKS) these are overridden per-environment.
-  namespaces = {
-    argocd = {
-      req_cpu = "2"
-      req_mem = "4Gi"
-      lim_cpu = "4"
-      lim_mem = "8Gi"
-    }
-    mlflow = {
-      req_cpu = "2"
-      req_mem = "4Gi"
-      lim_cpu = "4"
-      lim_mem = "8Gi"
-    }
-    ray-system = {
-      req_cpu = "4"
-      req_mem = "8Gi"
-      lim_cpu = "8"
-      lim_mem = "16Gi"
-    }
-    kubeflow = {
-      req_cpu = "2"
-      req_mem = "4Gi"
-      lim_cpu = "4"
-      lim_mem = "8Gi"
-    }
-    kserve = {
-      req_cpu = "2"
-      req_mem = "4Gi"
-      lim_cpu = "4"
-      lim_mem = "8Gi"
-    }
-    monitoring = {
-      req_cpu = "2"
-      req_mem = "4Gi"
-      lim_cpu = "4"
-      lim_mem = "8Gi"
-    }
-  }
-}
-
 resource "kubernetes_namespace" "this" {
-  for_each = local.namespaces
+  for_each = var.namespaces
 
   metadata {
     name = each.key
@@ -64,7 +21,7 @@ resource "kubernetes_namespace" "this" {
 }
 
 resource "kubernetes_resource_quota" "this" {
-  for_each = local.namespaces
+  for_each = var.namespaces
 
   metadata {
     name      = "default-quota"
