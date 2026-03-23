@@ -11,9 +11,7 @@ spec:
     # Helm chart — Bitnami PostgreSQL
     - repoURL: https://charts.bitnami.com/bitnami
       chart: postgresql
-      # Pin to a specific version in production. Check latest:
-      #   helm search repo bitnami/postgresql --versions | head -5
-      targetRevision: "*"
+      targetRevision: "18.5.11"
       helm:
         valueFiles:
           - $values/manifests/postgresql/values.yaml

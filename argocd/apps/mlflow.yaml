@@ -11,9 +11,7 @@ spec:
     # Helm chart — community-charts MLflow
     - repoURL: https://community-charts.github.io/helm-charts
       chart: mlflow
-      # Pin to a specific version in production. Check latest:
-      #   helm search repo community-charts/mlflow --versions | head -5
-      targetRevision: "*"
+      targetRevision: "1.8.1"
       helm:
         valueFiles:
           - $values/manifests/mlflow/values.yaml

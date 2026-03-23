@@ -11,9 +11,7 @@ spec:
     # Helm chart — Bitnami MinIO
     - repoURL: https://charts.bitnami.com/bitnami
       chart: minio
-      # Pin to a specific version in production. Check latest:
-      #   helm search repo bitnami/minio --versions | head -5
-      targetRevision: "*"
+      targetRevision: "17.0.21"
       helm:
         valueFiles:
           - $values/manifests/minio/values.yaml
