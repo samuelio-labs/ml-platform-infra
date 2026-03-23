@@ -165,7 +165,7 @@ in
       enable = true;
       name = "terraform-lint";
       description = "Lint Terraform files with tflint";
-      entry = "${inputs.pre-commit-terraform}/hooks/terraform_tflint.sh";
+      entry = "${pkgs.tflint}/bin/tflint";
       files = "\\.tf$";
       excludes = [ "\\.terraform-cache" ];
     };
@@ -174,14 +174,9 @@ in
       enable = true;
       name = "terraform-doc";
       description = "Auto-generate variable/output docs into README.md";
-      entry = "${inputs.pre-commit-terraform}/hooks/terraform_docs.sh";
+      entry = "${pkgs.terraform-docs}/bin/terraform-docs markdown table --output-file README.md --output-mode inject";
       files = "\\.tf$";
       excludes = [ "\\.terraform-cache" ];
-      args = [
-        "--hook-config=--path-to-file=README.md"
-        "--hook-config=--add-to-existing-file=true"
-        "--hook-config=--create-file-if-not-exist=false"
-      ];
     };
 
     # ── Security ───────────────────────────────────────────────────────────────
