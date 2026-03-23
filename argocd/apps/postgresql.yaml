@@ -10,8 +10,8 @@ metadata:
 spec:
   project: default
   sources:
-    # Helm chart — Bitnami PostgreSQL (OCI registry)
-    - repoURL: registry.bitnami.com/bitnamicharts
+    # Helm chart — Bitnami PostgreSQL (Broadcom repo)
+    - repoURL: https://repo.broadcom.com/bitnami-files
       chart: postgresql
       targetRevision: "18.5.11"
       helm:
