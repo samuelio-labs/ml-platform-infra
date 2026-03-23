@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgresql
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+    # Helm chart — Bitnami PostgreSQL
+    - repoURL: https://charts.bitnami.com/bitnami
+      chart: postgresql
+      # Pin to a specific version in production. Check latest:
+      #   helm search repo bitnami/postgresql --versions | head -5
+      targetRevision: "*"
+      helm:
+        valueFiles:
+          - $values/manifests/postgresql/values.yaml
+    # Values source — our infra repo
+    - repoURL: https://github.com/samuelio-labs/ml-platform-infra.git
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: mlflow
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false

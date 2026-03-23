@@ -1,0 +1,30 @@
+# Bitnami PostgreSQL — https://artifacthub.io/packages/helm/bitnami/postgresql
+# Password is pre-provisioned by Terraform in the postgres-credentials Secret.
+
+auth:
+  username: mlflow
+  database: mlflow
+  existingSecret: postgres-credentials
+  secretKeys:
+    userPasswordKey: password
+
+primary:
+  persistence:
+    enabled: true
+    size: 5Gi   # local dev — set 20Gi+ in prod
+
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: "1"
+      memory: 512Mi
+
+  # Allow MLflow and Kubeflow to connect from other namespaces
+  pgHbaConfiguration: |
+    local   all             all                                     trust
+    host    all             all             0.0.0.0/0               md5
+
+metrics:
+  enabled: true   # exposes /metrics for Prometheus scraping (Phase 4)

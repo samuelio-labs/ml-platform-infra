@@ -1,0 +1,71 @@
+# community-charts MLflow — https://artifacthub.io/packages/helm/community-charts/mlflow
+# Secrets are pre-provisioned by Terraform.
+
+backendStore:
+  databaseMigration: true
+  postgres:
+    enabled: true
+    host: postgresql.mlflow.svc.cluster.local
+    port: 5432
+    database: mlflow
+    user: mlflow
+    # Password injected via MLFLOW_BACKEND_STORE_URI env var from secret
+    password: ""
+
+artifactRoot:
+  s3:
+    enabled: true
+    bucket: mlflow-artifacts
+    # Point to in-cluster MinIO instead of AWS S3
+    awsAccessKeyId: ""      # injected from minio-credentials Secret
+    awsSecretAccessKey: ""  # injected from minio-credentials Secret
+
+serviceAccount:
+  create: true
+
+service:
+  type: ClusterIP
+  port: 5000
+
+# Extra env vars to wire up secrets and MinIO endpoint
+extraEnvVars:
+  - name: MLFLOW_S3_ENDPOINT_URL
+    value: http://minio.mlflow.svc.cluster.local:9000
+  - name: AWS_ACCESS_KEY_ID
+    valueFrom:
+      secretKeyRef:
+        name: minio-credentials
+        key: root-user
+  - name: AWS_SECRET_ACCESS_KEY
+    valueFrom:
+      secretKeyRef:
+        name: minio-credentials
+        key: root-password
+  - name: MLFLOW_FLASK_SECRET_KEY
+    valueFrom:
+      secretKeyRef:
+        name: mlflow-secret-key
+        key: secret-key
+
+# Backend store URI — postgres password injected via env
+extraEnvVarsSecret: ""
+extraArgs:
+  - --backend-store-uri
+  - postgresql://mlflow:$(MLFLOW_POSTGRES_PASSWORD)@postgresql.mlflow.svc.cluster.local:5432/mlflow
+
+extraEnvVarsAdditional:
+  - name: MLFLOW_POSTGRES_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: postgres-credentials
+        key: password
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: "1"
+    memory: 1Gi
+
+replicaCount: 1

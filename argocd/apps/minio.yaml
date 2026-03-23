@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: minio
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+    # Helm chart — Bitnami MinIO
+    - repoURL: https://charts.bitnami.com/bitnami
+      chart: minio
+      # Pin to a specific version in production. Check latest:
+      #   helm search repo bitnami/minio --versions | head -5
+      targetRevision: "*"
+      helm:
+        valueFiles:
+          - $values/manifests/minio/values.yaml
+    # Values source — our infra repo
+    - repoURL: https://github.com/samuelio-labs/ml-platform-infra.git
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: mlflow
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
