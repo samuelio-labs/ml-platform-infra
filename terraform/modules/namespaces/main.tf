@@ -13,10 +13,10 @@ locals {
   # In production (EKS) these are overridden per-environment.
   namespaces = {
     argocd = {
-      req_cpu = "1"
-      req_mem = "2Gi"
-      lim_cpu = "2"
-      lim_mem = "4Gi"
+      req_cpu = "2"
+      req_mem = "4Gi"
+      lim_cpu = "4"
+      lim_mem = "8Gi"
     }
     mlflow = {
       req_cpu = "2"
