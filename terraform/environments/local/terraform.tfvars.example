@@ -7,5 +7,5 @@ postgres_password   = "changeme-pg-password"
 mlflow_secret_key   = "changeme-32-char-random-secret!!"
 
 argocd_chart_version = "7.7.0"
-git_repo_url         = "https://github.com/<your-org>/ml-platform-infra.git"
+git_repo_url         = "https://github.com/samuelio-labs/ml-platform-infra.git"
 git_target_revision  = "main"
