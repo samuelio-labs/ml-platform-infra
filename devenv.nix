@@ -34,6 +34,10 @@ in
     pkgs.python3
     pkgs.uv # fast Python package manager / virtualenv
 
+    # ML data versioning
+    unstable.dvc # Data Version Control CLI (S3/MinIO backend)
+    pkgs.minio-client # mc — MinIO bucket management & debugging
+
     # Developer experience
     pkgs.gh # GitHub CLI — PRs, issues, releases
     pkgs.jq # JSON querying (handy for K8s output)
@@ -172,6 +176,52 @@ in
       NS="''${1:?Usage: mlogs <namespace> <app-label>}"
       APP="''${2:?Usage: mlogs <namespace> <app-label>}"
       kubectl logs -n "$NS" -l "app=$APP" --all-containers --follow --max-log-requests=10
+    '';
+
+    # Port-forward the in-cluster MinIO API to localhost:9000 and console to
+    # localhost:9001. Runs in the foreground; Ctrl-C to stop.
+    # Usage: minio-pf
+    minio-pf.exec = ''
+      echo "Forwarding MinIO API → localhost:9000, Console → localhost:9001"
+      echo "  mc alias: mc alias set local http://localhost:9000 <user> <pass>"
+      echo "  Press Ctrl-C to stop."
+      kubectl port-forward svc/minio 9000:9000 9001:9001 -n mlflow
+    '';
+
+    # Configure a DVC S3 remote pointing at the platform MinIO instance.
+    # Must be run inside a git + DVC-initialised project directory.
+    # Reads MinIO credentials directly from the cluster secret.
+    # Usage: dvc-remote-setup [remote-name]   (default remote name: platform)
+    dvc-remote-setup.exec = ''
+      set -euo pipefail
+      REMOTE_NAME="''${1:-platform}"
+      BUCKET="dvc-store"
+      MINIO_NS="mlflow"
+
+      # Verify DVC is initialised
+      if [ ! -d ".dvc" ]; then
+        echo "No .dvc directory found. Initialise DVC first:"
+        echo "  dvc init"
+        exit 1
+      fi
+
+      echo "Reading MinIO credentials from cluster secret minio-credentials..."
+      MINIO_USER=$(kubectl get secret minio-credentials -n "$MINIO_NS" \
+        -o jsonpath='{.data.root-user}' | base64 -d)
+      MINIO_PASS=$(kubectl get secret minio-credentials -n "$MINIO_NS" \
+        -o jsonpath='{.data.root-password}' | base64 -d)
+
+      echo "Configuring DVC remote [''${REMOTE_NAME}] → s3://''${BUCKET} via localhost:9000"
+      dvc remote add -d -f "$REMOTE_NAME" "s3://''${BUCKET}"
+      dvc remote modify "$REMOTE_NAME" endpointurl http://localhost:9000
+      dvc remote modify --local "$REMOTE_NAME" access_key_id "$MINIO_USER"
+      dvc remote modify --local "$REMOTE_NAME" secret_access_key "$MINIO_PASS"
+
+      echo ""
+      echo "Done. DVC remote [''${REMOTE_NAME}] configured."
+      echo "Ensure MinIO is port-forwarded before pushing/pulling:"
+      echo "  minio-pf &"
+      echo "  dvc push / dvc pull"
     '';
   };
 
